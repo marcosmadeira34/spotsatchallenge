@@ -43,3 +43,13 @@ class Edge(Base):
     graph = relationship("Graph", back_populates="edges")
     from_node = relationship("Node", foreign_keys=[from_node_name], back_populates="edges_from")
     to_node = relationship("Node", foreign_keys=[to_node_name], back_populates="edges_to")
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    password = Column(String)
+    
+    

@@ -2,12 +2,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from app.database import get_db
+from app.db.database import get_db
 from app.schemas import graph
 from app.controllers.graph import create_graph, get_graph, find_all_routes, delete_graph_by_id, find_shortest_route
 from app.models.graph import Node, Edge, Graph
+from app.core.security import create_access_token, authenticate_user, get_password_hash 
 
 router = APIRouter()
+
 
 @router.post("/", response_model=graph.GraphResponse)
 def create_new_graph(graph: graph.GraphCreate, db: Session = Depends(get_db)):

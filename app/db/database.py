@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
+from sqlalchemy.ext.declarative import declarative_base
 
 user = os.environ.get("USER")
 password = os.environ.get("PASSWORD")
@@ -13,6 +14,8 @@ DATABASE_URL = f"postgresql://{user}:{password}@{host}:{port}/geodb"
 
 engine = create_engine(DATABASE_URL)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
 
 def get_db():
     db = Session()
