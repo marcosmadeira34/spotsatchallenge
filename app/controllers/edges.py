@@ -18,3 +18,5 @@ def create_edge(edge: EdgeCreate, db: Session):
 
 def get_edges(db: Session):
     return db.query(EdgeModel).all() """
+
+    

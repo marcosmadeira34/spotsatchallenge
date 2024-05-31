@@ -48,3 +48,7 @@ class GraphResponse(BaseModel):
 class GraphDelete(BaseModel):
     id: int
     
+
+class RouteResponse(BaseModel):
+    route: List[NodeResponse]
+    
