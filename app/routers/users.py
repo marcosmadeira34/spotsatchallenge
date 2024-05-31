@@ -1,7 +1,3 @@
-# app/routers/graph.py
-
-# app/routers/graph.py
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.schemas.users import UserCreate, User
@@ -9,6 +5,8 @@ from app.models.graph import User as UserModel
 from app.core.security import get_password_hash, create_access_token, authenticate_user
 from app.db.database import get_db
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from app.core.auth_handler import signJwt
+
 
 router = APIRouter()
 
@@ -36,6 +34,6 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
             detail="Invalid username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = create_access_token(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+    access_token = signJwt(user.username)
+    return access_token
 

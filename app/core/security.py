@@ -25,8 +25,25 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 def verify_password(plain_password, hashed_password) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+
 def get_password_hash(password) -> str:
     return pwd_context.hash(password)
+
+
+def get_user(db: Session, username: str):
+    if username in db:
+        user_dict = db[username]
+        return User(**user_dict)
+
+
+def authenticate_user(username: str, password: str, db: Session):
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        return False
+    if not verify_password(password, user.password):
+        return False
+    return user
+
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
@@ -38,18 +55,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
-def authenticate_user(username: str, password: str, db: Session):
-    user = db.query(User).filter(User.username == username).first()
-    if not user:
-        return False
-    if not verify_password(password, user.password):
-        return False
-    return user
-
-
-def get_user(db: Session, username: str):
-    return db.query(User).filter(User.username == username).first()
 
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
@@ -65,7 +70,12 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = db.query(User).filter(User.username == username).first()
+    user = get_user(db, username=username)
     if user is None:
         raise credentials_exception
     return user
+
+
+
+
+

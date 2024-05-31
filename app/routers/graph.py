@@ -5,8 +5,8 @@ from typing import List, Optional
 from app.db.database import get_db
 from app.schemas import graph
 from app.controllers.graph import create_graph, get_graph, find_all_routes, delete_graph_by_id, find_shortest_route
-from app.models.graph import Node, Edge, Graph
-from app.core.security import create_access_token, authenticate_user, get_password_hash 
+from app.models.graph import User
+from app.core.auth_bearer import JWTBearer
 
 router = APIRouter()
 
@@ -15,12 +15,13 @@ router = APIRouter()
 def create_new_graph(graph: graph.GraphCreate, db: Session = Depends(get_db)):
     return create_graph(graph, db)
 
-@router.get("/{graph_id}", response_model=graph.GraphResponse)
+@router.get("/{graph_id}", response_model=graph.GraphResponse, dependencies=[Depends(JWTBearer())])
 def read_graph(graph_id: int, db: Session = Depends(get_db)):
     graph = get_graph(graph_id, db)
     if not graph:
         raise HTTPException(status_code=404, detail="Graph not found")
     return graph
+
 
 @router.put("/{graph_id}", response_model=graph.GraphResponse)
 def update_graph(graph_id: int, graph: graph.GraphCreate, db: Session = Depends(get_db)):
