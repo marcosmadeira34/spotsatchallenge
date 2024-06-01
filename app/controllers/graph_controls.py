@@ -332,3 +332,58 @@ def find_shortest_route(graph_id: int, start_node: str, end_node: str, db: Sessi
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
+
+# Função para demonstrar o custo computacional de encontrar todas as rotas possíveis
+def compute_all_routes(graph_id: int, start_node: str, end_node: str, max_stops: Optional[int], db: Session) -> List[RouteResponse]:
+    try:
+        # Busca o grafo no banco de dados
+        graph = db.query(Graph).filter(Graph.id == graph_id).first()
+        if not graph:
+            raise HTTPException(status_code=404, detail="Graph not found")
+
+        # Busca todos os nós e arestas do grafo
+        nodes = db.query(Node).filter(Node.graph_id == graph_id).all()
+        edges = db.query(Edge).filter(Edge.graph_id == graph_id).all()
+
+        # Cria um grafo direcionado com NetworkX
+        G = nx.DiGraph()
+
+        # Adiciona os nós ao grafo NetworkX
+        for node in nodes:
+            point: Point = to_shape(node.geom)
+            G.add_node(node.name, id=node.id, longitude=point.x, latitude=point.y)
+
+        # Adiciona as arestas ao grafo NetworkX
+        for edge in edges:
+            G.add_edge(edge.from_node_name, edge.to_node_name, weight=edge.weight)
+
+        all_routes = []
+
+        # Verifica se deve considerar um limite de paradas
+        if max_stops is not None:
+            for path in nx.all_simple_paths(G, source=start_node, target=end_node):
+                if len(path) - 1 <= max_stops:
+                    route = []
+                    for node_name in path:
+                        node = next((n for n in nodes if n.name == node_name), None)
+                        if node:
+                            point: Point = to_shape(node.geom)
+                            route.append(NodeResponse(id=node.id, name=node.name, longitude=point.x, latitude=point.y))
+                    all_routes.append(RouteResponse(route=route))
+        else:
+            for path in nx.all_simple_paths(G, source=start_node, target=end_node):
+                route = []
+                for node_name in path:
+                    node = next((n for n in nodes if n.name == node_name), None)
+                    if node:
+                        point: Point = to_shape(node.geom)
+                        route.append(NodeResponse(id=node.id, name=node.name, longitude=point.x, latitude=point.y))
+                all_routes.append(RouteResponse(route=route))
+
+        return all_routes
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")

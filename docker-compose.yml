@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  app:
+    image: your-app-image:latest
+    ports:
+      - 80:80
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./app:/app
+    restart: always
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=your-root-password
+      - MYSQL_DATABASE=your-database-name
+      - MYSQL_USER=your-username
+      - MYSQL_PASSWORD=your-password
+    volumes:
+      - ./db:/var/lib/mysql
+    restart: always

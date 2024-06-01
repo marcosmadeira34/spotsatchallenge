@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
 from sqlalchemy.orm import declarative_base
 
+
 Base = declarative_base()
 
 # Definindo a classe Graph
