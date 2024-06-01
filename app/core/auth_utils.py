@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from sqlalchemy.orm import Session
 import os
-from app.models.graph import User
+from app.models.graph_models import User
 from app.db.database import get_db
 import dotenv
 
