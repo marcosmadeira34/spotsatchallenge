@@ -57,6 +57,8 @@ jobs:
           done
 
       - name: Create PostGIS extension
+        env:
+          PGPASSWORD: postgres
         run: |
           psql -h localhost -U postgres -d geodb -c "CREATE EXTENSION postgis;"
 
