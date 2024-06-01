@@ -1,4 +1,4 @@
-# app/core/auth_handler.py
+# Arquivo responsável por gerar e decodificar tokens JWT 
 
 import os
 import time

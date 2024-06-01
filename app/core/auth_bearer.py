@@ -1,4 +1,4 @@
-# app/core/auth_bearer.py
+# Arquivo responsável por implementar a classe JWTBearer que é responsável por verificar se o token JWT é válido ou não.
 
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials

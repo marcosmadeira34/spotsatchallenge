@@ -13,7 +13,7 @@ class NodeResponse(BaseModel):
     latitude: float
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class EdgeCreate(BaseModel):
@@ -28,7 +28,7 @@ class EdgeResponse(BaseModel):
     weight: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class GraphCreate(BaseModel):
@@ -43,7 +43,7 @@ class GraphResponse(BaseModel):
     edges: List[EdgeResponse]
 
     class Config:
-        orm_mode = True 
+        from_attributes = True 
 
 class GraphDelete(BaseModel):
     id: int

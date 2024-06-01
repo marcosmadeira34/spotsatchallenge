@@ -1,7 +1,9 @@
+# Arquivo para conexão com o banco de dados PostgreSQL/PostGIS
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 user = os.environ.get("USER")
 password = os.environ.get("PASSWORD")

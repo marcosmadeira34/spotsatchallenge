@@ -11,7 +11,7 @@ from app.core.auth_bearer import JWTBearer
 router = APIRouter()
 
 
-@router.post("/", response_model=graph.GraphResponse)
+@router.post("/create", response_model=graph.GraphResponse)
 def create_new_graph(graph: graph.GraphCreate, db: Session = Depends(get_db)):
     return create_graph(graph, db)
 
