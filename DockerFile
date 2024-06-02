@@ -1,27 +1,17 @@
-# Define a imagem base
-FROM python:3.9-slim-buster
+# # Use uma imagem base oficial do Python
+# FROM python:3.11.9-slim
 
-# Define o diretório de trabalho dentro do contêiner
-WORKDIR /app
+# # Defina o diretório de trabalho
+# WORKDIR /app
 
-# Copia os arquivos do projeto para o contêiner
-COPY . /app
+# # Copie o arquivo de requisitos para o contêiner
+# COPY ./app/requirements.txt /app/requirements.txt
 
-# Instala as dependências do projeto
-RUN apt-get update && \
-    apt-get install -y postgresql-client && \
-    apt-get install -y postgis && \
-    pip install -r requirements.txt
+# # Instale as dependências necessárias
+# RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Define as variáveis de ambiente necessárias
-ENV POSTGRES_HOST=<host_do_postgres>
-ENV POSTGRES_PORT=<porta_do_postgres>
-ENV POSTGRES_USER=<usuário_do_postgres>
-ENV POSTGRES_PASSWORD=<senha_do_postgres>
-ENV POSTGRES_DB=<nome_do_banco_de_dados>
+# # Copie o conteúdo da aplicação para o contêiner
+# COPY ./app /app
 
-# Expõe a porta necessária para o projeto
-EXPOSE 8000
-
-# Define o comando de inicialização do projeto
-CMD <comando_de_inicialização_do_projeto>
+# # Comando para iniciar o servidor uvicorn
+# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
