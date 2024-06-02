@@ -94,3 +94,5 @@ SendTo/
 /ntuser.dat.LOG2
 /ntuser.ini
 /venv/
+
+*.env
